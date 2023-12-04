@@ -6,3 +6,4 @@ requests
 numpy
 yfinance
 pyotp
+logzero
