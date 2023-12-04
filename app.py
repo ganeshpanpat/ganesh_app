@@ -151,6 +151,7 @@ def get_expiry_day_fut_token():
   expiry_df=token_df
   expiry_df = token_df[(token_df['name'] == 'BANKNIFTY') & (token_df['instrumenttype'] == 'OPTIDX') & (token_df['expiry']>=now_dt)]
   expiry_day=expiry_df['expiry'].min()
+  st.write(expiry_day)
   bnf_expiry_df = token_df[(token_df['name'] == 'BANKNIFTY') & (token_df['instrumenttype'] == 'OPTIDX') & (token_df['expiry']>=now_dt)]
   bnf_expiry_day=bnf_expiry_df['expiry'].min()
   nf_expiry_df = token_df[(token_df['name'] == 'NIFTY') & (token_df['instrumenttype'] == 'OPTIDX') & (token_df['expiry']>=now_dt)]
@@ -160,6 +161,8 @@ def get_expiry_day_fut_token():
   st.session_state['bnf_expiry_day'] = bnf_expiry_day
   return expiry_day,nf_expiry_day,bnf_expiry_day
 expiry_day,nf_expiry_day,bnf_expiry_day=get_expiry_day_fut_token()
+st.write(st.session_state['nf_expiry_day'])
+st.write(st.session_state['bnf_expiry_day'])
 
 def getTokenInfo (symbol, exch_seg ='NSE',instrumenttype='OPTIDX',strike_price = 0,pe_ce = 'CE',expiry_day = None):
   if symbol=="BANKNIFTY" or symbol=="^NSEBANK":expiry_day=st.session_state['bnf_expiry_day']
@@ -797,34 +800,4 @@ def sub_loop_code(now_time):
     nf_trade_1_min=index_trade('NIFTY','1m')
 
 #end main algo code
-if algo_state:
-  now_time=datetime.datetime.now(tz=gettz('Asia/Kolkata'))
-  marketclose = now_time.replace(hour=14, minute=55, second=0, microsecond=0)
-  marketopen = now_time.replace(hour=9, minute=19, second=0, microsecond=0)
-  if now_time>marketopen or now_time < marketclose:
-    sub_loop_code(now_time)
-    st.session_state['algo_state']="Running"
-  else:
-    st.session_state['algo_state']="Market Closed"
-  last_login.text(f"Last Login {st.session_state['login_time']} Algo : {st.session_state['algo_state']}")
-  ss=1000*(61-datetime.datetime.now(tz=gettz('Asia/Kolkata')).second)
-  st_autorefresh(interval=ss,key="dataframerefresh")
-if algo_state==False:
-  st.session_state['algo_state']="Not Running"
-  last_login.text(f"Last Login {st.session_state['login_time']} Algo : {st.session_state['algo_state']}")
-if nf_ce:
-  manual_buy("NIFTY",ce_pe="CE",index_ltp=st.session_state['Nifty'])
-  st.write(f"Buy Nifty CE {st.session_state['Nifty']}")
-if nf_pe:
-  manual_buy("NIFTY",ce_pe="PE",index_ltp=st.session_state['Nifty'])
-  st.write(f"Buy Nifty PE {st.session_state['Nifty']}")
-if bnf_ce:
-  manual_buy("BANKNIFTY",ce_pe="CE",index_ltp=st.session_state['BankNifty'])
-  st.write(f"Buy Bank Nifty CE {st.session_state['BankNifty']}")
-if bnf_pe:
-  manual_buy("BANKNIFTY",ce_pe="PE",index_ltp=st.session_state['BankNifty'])
-  st.write(f"Buy Bank Nifty PE {st.session_state['BankNifty']}")
-update_order_book()
-update_position()
-print_ltp()
-sl_trail()
+
