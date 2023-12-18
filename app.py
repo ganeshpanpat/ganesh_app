@@ -69,10 +69,11 @@ with col1:
   close_all=st.button("Close All")
   algo_state=st.checkbox("Run Algo")
 with col2:
-  tab1, tab2, tab3, tab4= st.tabs(["Order_Book", "Position","Algo Trade", "Settings"])
+  tab1, tab2, tab3, tab4, tab5= st.tabs(["Order_Book", "Position","Algo Trade", "Settings","Near Options"])
   with tab1:order_datatable=st.empty()
   with tab2:position_datatable=st.empty()
   with tab3:algo_datatable=st.empty()
+  with tab5:near_opt_list=st.empty()
   with tab4:
     buy_indicator = st.multiselect('Select Buy Indicator',['St Trade', 'ST_10_2 Trade', 'RSI MA Trade', 'RSI_60 Trade'],
                                    ['St Trade', 'ST_10_2 Trade', 'RSI MA Trade', 'RSI_60 Trade'])
